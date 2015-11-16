@@ -1,107 +1,28 @@
-## Carregando pacotes
-require(chron)
-require(lubridate)
-require(e1071)
-require(dummies)
-require(plyr)
-require(MASS)
-require(dynlm)
-require(car)
-require(xtable)
-
-
-
-
-## Lendo os microdados
-microdados_modelos = read.csv2("C:\\Users\\fernando.teixeira\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\Dados\\Microdados_Filtrados\\microdados_basefinal_modelos_040815.csv")
-#microdados_modelos = read.csv2("C:\\Users\\ingrid.oliveira\\Dropbox\\10 Expectativas de inflaÃ§Ã£o - Brasil\\ProgramasTD64\\Dados\\Microdados_Filtrados\\microdados_basefinal_modelos_040815.csv")
-microdados_modelos[,"Mes_Ano"] = chron(as.character(microdados_modelos[,"Mes_Ano"]),
-                                       format = "d/m/y", out.format = "d/m/y")
-microdados_modelos[,"Ano"] = year(microdados_modelos[,"Mes_Ano"])
-# microdados_modelos = microdados_modelos[, -64]
-
-# Obtendo IPCA de dois meses passados
-inflacao_def = unique(microdados_modelos[,c("Mes_Ano", "IPCA")])
-inflacao_def[3:nrow(inflacao_def),"IPCA_lag2"] = inflacao_def[1:(nrow(inflacao_def) - 2),"IPCA"]
-inflacao_def = inflacao_def[,c("Mes_Ano", "IPCA_lag2")]
-
-microdados_modelos = merge(microdados_modelos, inflacao_def)
-
-aux_modelo1 = c("Resposta", 
-                "Renda_2", "Renda_3", "Renda_4",
-                "Escolaridade_2", "Escolaridade_3", "Escolaridade_4", 
-                "Cidade_2", "Cidade_3", "Cidade_4", "Cidade_5", "Cidade_6", "Cidade_7", 
-                "Idade_2", "Idade_3", "Idade_4", 
-                "Sexo_2", 
-                "Pergunta_1177_2", "Pergunta_1177_3", 
-                "Pergunta_1178_2", "Pergunta_1178_3", 
-                "Pergunta_1147_2", "Pergunta_1147_3", 
-                "Pergunta_1149_2", "Pergunta_1149_3", 
-                "Pergunta_1182_2", "Pergunta_1182_3", 
-                "Pergunta_1183_2", "Pergunta_1183_3",
-                "Pergunta_1189_2", "Pergunta_1189_3",
-                "Pergunta_1194_2", "Pergunta_1194_3")
-
-
-microdados_modelo1 = microdados_modelos[complete.cases(microdados_modelos),
-                                        c("Mes_Ano","Resposta", 
-                                          "Renda_2", "Renda_3", "Renda_4",
-                                          "Escolaridade_2", "Escolaridade_3", "Escolaridade_4", 
-                                          "Cidade_2", "Cidade_3", "Cidade_4", "Cidade_5", "Cidade_6", "Cidade_7", 
-                                          "Idade_2", "Idade_3", "Idade_4", 
-                                          "Sexo_2", 
-                                          "Pergunta_1177_2", "Pergunta_1177_3", 
-                                          "Pergunta_1178_2", "Pergunta_1178_3", 
-                                          "Pergunta_1147_2", "Pergunta_1147_3", 
-                                          "Pergunta_1149_2", "Pergunta_1149_3", 
-                                          "Pergunta_1182_2", "Pergunta_1182_3", 
-                                          "Pergunta_1183_2", "Pergunta_1183_3",
-                                          "Pergunta_1189_2", "Pergunta_1189_3",
-                                          "Pergunta_1194_2", "Pergunta_1194_3", 
-                                          "IPCA", "IPCA_lag2", "Previsao_Focus", "Learn_4em8")]
-
-
-
-#microdados_modelo1[,"Resposta"] = as.numeric(microdados_modelo1[,"Resposta"])
-#for(k in 1:length(aux_modelo1)){
-#  assign(aux_modelo1[k], microdados_modelo1[,k])
-#}
-# teste = microdados_modelo1[,2:ncol(microdados_modelo1)]
-
-# modelo1 = lm(microdados_modelo1[,"Resposta"] ~ teste)
-
-
-##Constru??o das dummies de per?odo
-periodos = microdados_modelo1$Mes_Ano
-periodos = dummy( as.character(periodos) )
-periodos = as.data.frame(periodos)
-
-microdados_modelo1 = cbind(microdados_modelo1, periodos)
-
-
-
-microdados_modelos2 = read.csv2("C:\\Users\\fernando.teixeira\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\Dados\\Microdados_Filtrados\\IPCA\\Pasta2.csv")
-microdados_modelos2[,"Mes_Ano"] = chron(as.character(microdados_modelos2[,"Mes_Ano"]),
-                                       format = "d/m/y", out.format = "d/m/y")
-
-
-teste= join(microdados_modelo1,microdados_modelos2)
-
-
+## Carregando funÃ§Ãµes necessÃ¡rias
+nomes = list("ingrid.oliveira", "fernando.teixeira")
+for (nome in nomes)
+{
+  direc = paste0("C:\\Users\\", nome, "\\Dropbox\\10 Expectativas de inflaÃ§Ã£o - Brasil\\ProgramasTD64\\")
+  try(setwd(direc), silent = TRUE)
+  
+}
+rm(nome, nomes)
+source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding = c("utf8"))
+##
 
 
 
 #formula e modelo 3
 formula3 = Resposta ~ 0 +  
-  . - Mes_Ano - IPCA - Índice.geral + (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
+  . - Mes_Ano - IPCA - Ãndice.geral + (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
                                          Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
                                          Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
                                          Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * Previsao_Focus +
   (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
      Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
      Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                   Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) +
+     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                                                   Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o) +
   (Pergunta_1177_2 + 
      Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
      Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
@@ -113,8 +34,8 @@ formula3 = Resposta ~ 0 +
      Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
      Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
      Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
-     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                               Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) -
+     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                                                               Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o) -
   `as.character(periodos)01/12/05` - `as.character(periodos)01/01/06` -
   `as.character(periodos)01/02/06` - `as.character(periodos)01/03/06` -
   `as.character(periodos)01/04/06` - `as.character(periodos)01/05/06` -
@@ -132,9 +53,9 @@ summary(modelo3)
 formulalh = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
                               Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
                               Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-                              Idade_3 + Idade_4 + Sexo_2 + Learn_4em8 + Alimentação.e.bebidas + 
-                              Habitação  + Artigos.de.residência + Vestuário +
-                              Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação +
+                              Idade_3 + Idade_4 + Sexo_2 + Learn_4em8 + AlimentaÃ§Ã£o.e.bebidas + 
+                              HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                              Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o +
                               Pergunta_1177_2 + Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
                               Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + + 
                               Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3 +
@@ -145,8 +66,8 @@ formulalh = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
   (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
      Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
      Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                   Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) +
+     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                                                   Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o) +
   (Pergunta_1177_2 + 
      Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
      Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
@@ -158,8 +79,8 @@ formulalh = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
      Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
      Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
      Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
-     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                               Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) -
+     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                                                               Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o) -
     `as.character(periodos)01/12/05` - `as.character(periodos)01/01/06` -
     `as.character(periodos)01/02/06` - `as.character(periodos)01/03/06` -
     `as.character(periodos)01/04/06` - `as.character(periodos)01/05/06` -
@@ -179,7 +100,7 @@ lh4=linearHypothesis(modelolh,c("Cidade_2=0", "Cidade_3=0", "Cidade_4=0", "Cidad
 lh5=linearHypothesis(modelolh,c("Idade_2 =0", " Idade_3 =0", " Idade_4=0"))
 
 ##IPCA
-lh6=linearHypothesis(modelolh,c("Alimentação.e.bebidas=0", "Habitação=0", " Artigos.de.residência =0", " Vestuário =0", " Transportes =0", " Saúde.e.cuidados.pessoais =0", " Despesas.pessoais =0", " Educação =0", " Comunicação=0"))
+lh6=linearHypothesis(modelolh,c("AlimentaÃ§Ã£o.e.bebidas=0", "HabitaÃ§Ã£o=0", " Artigos.de.residÃªncia =0", " VestuÃ¡rio =0", " Transportes =0", " SaÃºde.e.cuidados.pessoais =0", " Despesas.pessoais =0", " EducaÃ§Ã£o =0", " ComunicaÃ§Ã£o=0"))
 
 ##OPINIAO
 lh7=linearHypothesis(modelolh,c("Pergunta_1177_2 =0", " Pergunta_1177_3 =0", " Pergunta_1178_2 =0", " Pergunta_1178_3 =0", " Pergunta_1147_2 =0", " Pergunta_1147_3 =0", " Pergunta_1149_2 =0", " Pergunta_1149_3 =0", " Pergunta_1182_2 =0", " Pergunta_1182_3 =0", " Pergunta_1183_2 =0", " Pergunta_1183_3 =0", " Pergunta_1189_2 =0", " Pergunta_1189_3 =0", " Pergunta_1194_2 =0", " Pergunta_1194_3=0"))
@@ -204,8 +125,8 @@ x=rbind(lh1$`Pr(>F)`[2], lh2$`Pr(>F)`[2], lh3$`Pr(>F)`[2], lh4$`Pr(>F)`[2],
 x=as.data.frame(x)
 #options(digits=10)
 x$V1= x$V1[x$V1<=0.01]=0.000
-row.names(x) <- c("Demográficas","Renda", "Escolaridade", "Cidade", "Idade", "IPCA",
-                  "Opinião", "Current situation of country", "Future situation of country", 
+row.names(x) <- c("DemogrÃ¡ficas","Renda", "Escolaridade", "Cidade", "Idade", "IPCA",
+                  "OpiniÃƒÂ£o", "Current situation of country", "Future situation of country", 
                   "Current sit. household", "Future sit. household", "Current employment",
                   "Future employment", "Interest rate", "Purchase of durable", 
                   "Current economic indicators", "Future economic indicators")
@@ -221,8 +142,8 @@ xtable(x)
 formula4 = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
   Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
   Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-  Idade_3 + Idade_4 + Sexo_2 + Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-  Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação + Learn_4em8 + Pergunta_1177_2 + 
+  Idade_3 + Idade_4 + Sexo_2 + AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+  Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o + Learn_4em8 + Pergunta_1177_2 + 
   Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
   Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
   Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
@@ -236,8 +157,8 @@ formula4 = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
   (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
      Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
      Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                   Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) +
+     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                                                   Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o) +
   (Pergunta_1177_2 + 
      Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
      Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
@@ -249,8 +170,8 @@ formula4 = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
      Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
      Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
      Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
-     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                               Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação)
+     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (AlimentaÃ§Ã£o.e.bebidas + HabitaÃ§Ã£o  + Artigos.de.residÃªncia + VestuÃ¡rio +
+                                                               Transportes + SaÃºde.e.cuidados.pessoais + Despesas.pessoais + EducaÃ§Ã£o + ComunicaÃ§Ã£o)
 
 
 
