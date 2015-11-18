@@ -2,7 +2,7 @@
 nomes = list("ingrid.oliveira", "fernando.teixeira")
 for (nome in nomes)
 {
-  direc = paste0("C:\\Users\\", nome, "\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\")
+  direc = paste0("C:\\Users\\", nome, "\\Dropbox\\10 Expectativas de inflaÃ§Ã£o - Brasil\\ProgramasTD64\\")
   try(setwd(direc), silent = TRUE)
   
 }
