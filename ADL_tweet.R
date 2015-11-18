@@ -49,7 +49,7 @@ source("Funcoes\\Modelos\\bases\\base_adl_tweet.R", encoding = c("utf8"))
     summary(fit)
     
   #modelo 2
-    ###teste utilizando resÃ�duos da regressÃ£o
+    ###teste utilizando resíduos da regressão
     
     ra =  Lag(aggdata[,1],1)
     ia = Lag(aggdata[,2],2)
