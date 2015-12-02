@@ -8,9 +8,10 @@
   }
   source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding = c("utf8"))
 ##
+##Carregando Pacotes
+  require(corrgram)
 
-
-
+##
 ##Plotando
   plot(microdados_modelos$Resposta,type='p')
   plot(microdados_modelos$Idade,type='p')
@@ -43,8 +44,8 @@
 ##
 ##CORRELACOES  
   quanti <- aggdata[,c("Resposta","IPCA","Previsao_Focus", "Tweets")]
-  cor(quanti)
-  corrgram(quanti,order=TRUE)
+  correlacao=cor(quanti)
+  corrgram(quanti,order=TRUE, labels = c("Media", "Inf. Exp.", "IPCA", "Focus"))
 ##
 
 ##Dados TWITTER
@@ -71,11 +72,13 @@
   tv <- ts(tweet_mess$Soma.de.total.tv, start = c(2007,8), end = c(2015,9), frequency = 12)
   tudo <- cbind(jornais, portais, revistas, tv)
   dygraph(tudo)
+  matplot(tudo, type="l", lty=1)
   
   #média por veículo de mídia
   tudo2 <- cbind(jornais/8, portais/4, revistas/4, tv/2)
   colnames(tudo2)=c("jornais", "portais", "revistas", "tv")
   dygraph(tudo2)
+  matplot(tudo2, type="l", lty=1)
   
   quanti <- tweet_mess[1:98,22:25]
   quanti$Soma.de.total.jornal = quanti$Soma.de.total.jornal/8 

@@ -10,11 +10,11 @@ setwd(direc)
 rec=read.csv2("Dados\\Pasta1.csv")
 
 rec=ts(rec, start=c(1980), frequency=4)
-hilo <- c(62,179)
+hilo <- c(64,179)
 
 
-plot(rec, axes=F, xlab="years", ylab="value", xlim=c(1980,2014.1))
-
+plot(rec, axes=F, xlab="Years", ylab="GDP Index", xlim=c(1980,2014.1))
+#plot.window(c(1980,2014.1), c(62,79))
 polygon(x=c(1981.1,1981.1, 1983.1,1983.1),
         y=c(hilo, rev(hilo)),
         density=NA, col="skyblue", border=NA)
@@ -41,9 +41,12 @@ polygon(x=c(2008.4,2008.4, 2009.1,2009.1),
         density=NA, col="skyblue", border=NA)
 polygon(x=c(2014.2,2014.2, 2015.1,2015.1),
         y=c(hilo, rev(hilo)),
-        density=NA, col="orange", border=NA)
+        density=NA, col="skyblue", border=NA)
 box()
 axis(side=1)
 axis(side=2, las=1)
 lines(rec, rec, type="l", lwd=1) # paint again so line comes on top
+
+par(xpd=TRUE)
+legend(2004, 210, c("Recession Periods"), box.lwd = 0,box.col = "white",bg = "white", fill=c("skyblue"), cex=0.5,horiz=TRUE)
 
