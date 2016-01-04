@@ -1,12 +1,16 @@
 ## Carregando funções necessárias
-  nomes = list("ingrid.oliveira", "fernando.teixeira")
+  nomes = list("ingrid.oliveira", "fernando.teixeira", "fteixeira")
+  diretorios = list("C:/Users/", "/home/")
   for (nome in nomes)
   {
-    direc = paste0("C:\\Users\\", nome, "\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\")
+    for (diret in diretorios)
+    {
+    direc = paste0(diret, nome, "/Dropbox/10 Expectativas de inflação - Brasil/ProgramasTD64")
     try(setwd(direc), silent = TRUE)
-    
+    }
   }
-  source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding = c("utf8"))
+  
+  source(paste0(getwd(), "/Funcoes/Modelos/bases/base_modelo_tweet.R"), encoding = c("utf8"))
 ##
 ##Carregando Pacotes
   require(corrgram)
@@ -49,9 +53,9 @@
 ##
 
 ##Dados TWITTER
-  tweet_mess = read.csv2("Dados\\Twitter\\tweet_mes.csv")
+  tweet_mess = read.csv2("Dados/Twitter/tweet_mes.csv")
   tweet_mes = tweet_mess[1:98,3:20]
-  tweet_dia = read.csv2("Dados\\Twitter\\tweet_dia.csv")
+  tweet_dia = read.csv2("Dados/Twitter/tweet_dia.csv")
   
 ##Gráficos
   tweet_mes2 = ts(tweet_mess[1:98,3:20], start = c(2007,8), end = c(2015,9), frequency = 12)

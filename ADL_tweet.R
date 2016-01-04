@@ -1,11 +1,14 @@
-nomes = list("ingrid.oliveira", "fernando.teixeira")
+nomes = list("ingrid.oliveira", "fernando.teixeira", "fteixeira")
+diretorios = list("C:/Users/", "/home/")
 for (nome in nomes)
 {
-  direc = paste0("C:\\Users\\", nome, "\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\")
-  try(setwd(direc), silent = TRUE)
-  
+  for (diret in diretorios)
+  {
+    direc = paste0(diret, nome, "/Dropbox/10 Expectativas de inflação - Brasil/ProgramasTD64")
+    try(setwd(direc), silent = TRUE)
+  }
 }
-source("Funcoes\\Modelos\\bases\\base_adl_tweet.R", encoding = c("utf8"))
+source("Funcoes/Modelos/bases/base_adl_tweet.R", encoding = c("utf8"))
 
 
 ###MONTAGEM VARIÁVEIS MODELO ADL COM TWITTER
@@ -21,7 +24,7 @@ source("Funcoes\\Modelos\\bases\\base_adl_tweet.R", encoding = c("utf8"))
 ###  
   
 ###IMPORTANDO RENDA AGREGADA  
-  renda_agregada = read.csv2("Dados\\Microdados_Filtrados\\IPCA\\RA.csv", colClasses = c("character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"), header = TRUE, dec = ".")
+  renda_agregada = read.csv2("Dados/Microdados_Filtrados/IPCA/RA.csv", colClasses = c("character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"), header = TRUE, dec = ".")
 ###  
 
 ###MODELO RENDA AGREGADA
@@ -187,7 +190,7 @@ source("Funcoes\\Modelos\\bases\\base_adl_tweet.R", encoding = c("utf8"))
 
 #IMPORTANDO RENDA AGREGADA
 
-renda_agregada = read.csv2("Dados\\Microdados_Filtrados\\IPCA\\RA.csv", colClasses = c("character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"), header = TRUE, dec = ".")
+renda_agregada = read.csv2("Dados/Microdados_Filtrados/IPCA/RA.csv", colClasses = c("character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"), header = TRUE, dec = ".")
 
 
 # #SUB GRUPO IPCA errado pois está com d(...,2) -> trocar!
