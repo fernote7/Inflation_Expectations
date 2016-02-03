@@ -8,12 +8,12 @@ require(xtable)
 require(plyr)
 
 
-setwd(direc)
+#setwd(direc)
 
 ###Importando dados
 
 #MICRODADOS
-  microdados_modelos = read.csv2("Dados\\Microdados_Filtrados\\microdados_basefinal_modelos_040815.csv")
+  microdados_modelos = read.csv("Dados\\Microdados_Filtrados\\Microdados_Modelos_set05aset15.csv", sep = ";")
   #microdados_modelos = read.csv2("Dados\\Microdados_Filtrados\\microdados_basefinal_modelos_040815.csv")
   microdados_modelos[,"Mes_Ano"] = chron(as.character(microdados_modelos[,"Mes_Ano"]),
                                          format = "d/m/y", out.format = "d/m/y")
@@ -22,15 +22,15 @@ setwd(direc)
   microdados_modelos2 = read.csv2("Dados\\Microdados_Filtrados\\IPCA\\Pasta3.csv")
   microdados_modelos2[,"Mes_Ano"] = chron(as.character(microdados_modelos2[,"Mes_Ano"]),
                                         format = "d/m/y", out.format = "d/m/y")
-#TWITTER
-  tweet=read.csv2("Dados\\Twitter\\base\\tweetglobo.csv")
-  colnames(tweet) <- c("Mes_Ano", "ano", "mes", "contagem")
-  tweet = tweet[1:53,]
-  tweet[,"Mes_Ano"] = chron(as.character(tweet[,"Mes_Ano"]),
-                            format = "d/m/y", out.format = "d/m/y")
-  keeps <- c("Mes_Ano","contagem")
-  tweet=tweet[keeps]
-  microdados_modelos = merge(microdados_modelos, tweet)
+# #TWITTER
+#   tweet=read.csv2("Dados\\Twitter\\base\\tweetglobo.csv")
+#   colnames(tweet) <- c("Mes_Ano", "ano", "mes", "contagem")
+#   tweet = tweet[1:53,]
+#   tweet[,"Mes_Ano"] = chron(as.character(tweet[,"Mes_Ano"]),
+#                             format = "d/m/y", out.format = "d/m/y")
+#   keeps <- c("Mes_Ano","contagem")
+#   tweet=tweet[keeps]
+#   microdados_modelos = merge(microdados_modelos, tweet)
 
 ###dados do IPCA desagregado
   microdados_modelos2=microdados_modelos2[1:100,]
@@ -96,11 +96,13 @@ setwd(direc)
 
 ###AGREGANDO DADOS RELEVANTES PARA MODELOS ADL
   dados = microdados_modelos
-  classes1 = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta", "contagem")
-  expinf1_mes = aggregate(dados[,"Resposta"], dados[,classes1], mean)
+  # classes1 = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta", "contagem")
+  classes2= c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta")
+  expinf1_mes = aggregate(dados[,"Resposta"], dados[,classes2], mean)
   #expinf1_mes = aggregate(x = microdados_modelos$Resposta, by = list(microdados_modelos$Mes_Ano, microdados_modelos$Cidade, microdados_modelos$Renda), FUN = "mean")
   expinf1_mes = expinf1_mes[order(expinf1_mes$Cidade, expinf1_mes$Renda, expinf1_mes$Mes_Ano),]
-  colnames(expinf1_mes) = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta","Tweets" , "Resposta")
+  # colnames(expinf1_mes) = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta","Tweets" , "Resposta")
+  colnames(expinf1_mes) = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta","Resposta")
   aggdata2 <- aggregate(aggdata$x, by=list(aggdata$Group.2), 
                         FUN=sum, na.rm=TRUE)
   aggdata3 = aggregate(expinf1_mes$IPCA, by=list(expinf1_mes$Mes_Ano), 
@@ -113,10 +115,12 @@ setwd(direc)
   aggdata7 = aggregate(expinf1_mes$Tweets, by=list(expinf1_mes$Mes_Ano), 
                        FUN=mean, na.rm=TRUE)
   aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x, aggdata7$x)
+  aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x)
   aggdata <- as.data.frame(aggdata)
   aggdata$V4 = as.numeric(aggdata$V4)
   aggdata$Data <- aggdata6[,1]
-  colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Tweets", "Mes_Ano")
+  # colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Tweets", "Mes_Ano")
+  colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Mes_Ano")
   rm(aggdata3,aggdata4,aggdata5,aggdata6, aggdata7, aggdata2)
-  write.table(aggdata, file="aggdata.csv", sep=";")
+  #write.table(aggdata, file="aggdata.csv", sep=";")
 ###

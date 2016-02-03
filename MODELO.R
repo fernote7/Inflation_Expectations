@@ -10,8 +10,6 @@ rm(nome, nomes)
 source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding = c("utf8"))
 ##
 
-
-
 #formula e modelo 3
 formula3 = Resposta ~ 0 +  
   . - Mes_Ano - IPCA - Índice.geral + (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +

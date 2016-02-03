@@ -13,7 +13,7 @@ source("Funcoes\\Modelos\\bases\\base_modelo_tweet.R", encoding = c("utf8"))
   periodos = microdados_modelo1$Mes_Ano
   periodos = dummy( as.character(periodos) )
   periodos = as.data.frame(periodos)
-  microdados_modelo1 = cbind(microdados_modelo1, periodos)
+  microdados_modelo1 = cbind(microdados_modelos, periodos)
   
   microdados_modelos2 = read.csv2("Dados\\Microdados_Filtrados\\IPCA\\Pasta2.csv")
   microdados_modelos2[,"Mes_Ano"] = chron(as.character(microdados_modelos2[,"Mes_Ano"]),
@@ -158,50 +158,24 @@ source("Funcoes\\Modelos\\bases\\base_modelo_tweet.R", encoding = c("utf8"))
 
 ###########################################
 
+teste = microdados_modelos[,18:38] 
+teste$Mes_Ano = microdados_modelos$Mes_Ano
+teste$Resposta = microdados_modelos$Resposta
+teste = merge(microdados_modelo1, periodos)
+  
 formulalh = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
-                              Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
-                              Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-                              Idade_3 + Idade_4 + Sexo_2 + Learn_4em8 + Alimentação.e.bebidas + 
-                              Habitação  + Artigos.de.residência + Vestuário +
-                              Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação +
-                              Pergunta_1177_2 + Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
-                              Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + + 
-                              Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3 +
-  (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
-     Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
-     Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * Previsao_Focus +
-  (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
-     Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
-     Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
-     Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                   Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) +
-  (Pergunta_1177_2 + 
-     Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
-     Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
-     Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
-     Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
-     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * Previsao_Focus +
-  (Pergunta_1177_2 + 
-     Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
-     Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
-     Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
-     Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
-     Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (Alimentação.e.bebidas + Habitação  + Artigos.de.residência + Vestuário +
-                                                               Transportes + Saúde.e.cuidados.pessoais + Despesas.pessoais + Educação + Comunicação) -
-    `as.character(periodos)01/12/05` - `as.character(periodos)01/01/06` -
-    `as.character(periodos)01/02/06` - `as.character(periodos)01/03/06` -
-    `as.character(periodos)01/04/06` - `as.character(periodos)01/05/06` -
-    `as.character(periodos)01/06/06` - `as.character(periodos)01/07/06` -
-    `as.character(periodos)01/08/06` - `as.character(periodos)01/09/06` -
-    `as.character(periodos)01/10/06`
+  Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 +
+  Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
+  Idade_3 + Idade_4 + Sexo_2
+
 
 modelolh = lm(formulalh, teste)
+summary(modelolh)
 #linearHypothesis(modelolh,c("Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 + Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + Idade_3 + Idade_4 + Sexo_2 + Learn_4em8 = 0"))
 #linearHypothesis(modelolh,c("Escolaridade_2 + Escolaridade_3 + Escolaridade_4=0"))
 
 ##DEMOGRAFICO
-  lh1=linearHypothesis(modelolh,c("Renda_2 =0", " Renda_3 =0", " Renda_4 =0", " Escolaridade_2 =0", " Escolaridade_3 =0", " Escolaridade_4 =0", " Cidade_2 =0", " Cidade_3 =0", " Cidade_4 =0", " Cidade_5 =0", " Cidade_6 =0", " Cidade_7 =0", " Idade_2 =0", " Idade_3 =0", " Idade_4 =0", " Sexo_2 =0", " Learn_4em8 = 0"))
+  lh1=linearHypothesis(modelolh,c("Renda_2 =0", " Renda_3 =0", " Renda_4 =0", " Escolaridade_2 =0", " Escolaridade_3 =0", " Escolaridade_4 =0", " Cidade_2 =0", " Cidade_3 =0", " Cidade_4 =0", " Cidade_5 =0", " Cidade_6 =0", " Cidade_7 =0", " Idade_2 =0", " Idade_3 =0", " Idade_4 =0", " Sexo_2 =0"))
   lh2=linearHypothesis(modelolh,c("Renda_2=0", "Renda_3 =0", "Renda_4=0"))
   lh3=linearHypothesis(modelolh,c("Escolaridade_2 =0", " Escolaridade_3 =0", " Escolaridade_4=0"))
   lh4=linearHypothesis(modelolh,c("Cidade_2=0", "Cidade_3=0", "Cidade_4=0", "Cidade_5=0", "Cidade_6=0", "Cidade_7=0"))
@@ -292,3 +266,44 @@ modelolh = lm(formulalh, teste)
 
 #write.table(teste, "teste.csv", sep = ";", col.names = TRUE)
 
+  formulalh = Resposta ~ 0 + Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
+    Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
+    Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
+    Idade_3 + Idade_4 + Sexo_2 + Learn_4em8 + IPCA +
+    Pergunta_1177_2 + Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
+    Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + + 
+    Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3 +
+    (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
+       Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
+       Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
+       Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * Previsao_Focus +
+    (Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
+       Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
+       Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
+       Idade_3 + Idade_4 + Sexo_2 + Learn_4em8) * (IPCA) +
+    (Pergunta_1177_2 + 
+       Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
+       Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
+       Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
+       Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
+       Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * Previsao_Focus +
+    (Pergunta_1177_2 + 
+       Pergunta_1177_3 + Pergunta_1178_2 + Pergunta_1178_3 +
+       Pergunta_1147_2 + Pergunta_1147_3 + Pergunta_1149_2 + 
+       Pergunta_1149_3 + Pergunta_1182_2 + Pergunta_1182_3 + 
+       Pergunta_1183_2 + Pergunta_1183_3 + Pergunta_1189_2 + 
+       Pergunta_1189_3 + Pergunta_1194_2 + Pergunta_1194_3) * (IPCA) -
+    `as.character(periodos)01/12/05` - `as.character(periodos)01/01/06` -
+    `as.character(periodos)01/02/06` - `as.character(periodos)01/03/06` -
+    `as.character(periodos)01/04/06` - `as.character(periodos)01/05/06` -
+    `as.character(periodos)01/06/06` - `as.character(periodos)01/07/06` -
+    `as.character(periodos)01/08/06` - `as.character(periodos)01/09/06` -
+    `as.character(periodos)01/10/06`
+  
+  formula4 = Resposta ~ Renda_2 + Renda_3 + Renda_4 + Escolaridade_2 +
+    Escolaridade_3 + Escolaridade_4 + Cidade_2 + Cidade_3 + 
+    Cidade_4 + Cidade_5 + Cidade_6 + Cidade_7 + Idade_2 + 
+    Idade_3 + Idade_4 + Sexo_2
+  model4 = lm(formula4, microdados_modelo1)
+  summary(model4)
+  

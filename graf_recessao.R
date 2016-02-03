@@ -7,7 +7,7 @@ for (nome in nomes)
 rm(nome, nomes)
 setwd(direc)
 
-rec=read.csv2("Dados\\Pasta1.csv")
+rec=read.csv2("Dados\\codace.csv")
 
 rec=ts(rec, start=c(1980), frequency=4)
 hilo <- c(64,179)

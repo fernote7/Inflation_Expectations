@@ -19,12 +19,12 @@ microdados_modelos[,"Ano"] = year(microdados_modelos[,"Mes_Ano"])
 ##
 
 ##Lendo Dados Twitter
-tweet=read.csv("Dados/Twitter/twitter_cont/folha/media.csv", colClasses = c("factor", "numeric", "numeric", "numeric"), sep = ";")
-colnames(tweet) <- c("Mes_Ano", "contagem", "prop", "news")
+tweet=read.csv("Dados/Twitter/twitter_cont/folha/media.csv", colClasses = c("factor", "numeric", "numeric", "numeric", "numeric"), sep = ";")
+colnames(tweet) <- c("Mes_Ano", "contagem", "prop", "news", "newst")
 #tweet = tweet[1:53,]
 tweet[,"Mes_Ano"] = chron(as.character(tweet[,"Mes_Ano"]),
                           format = "m/d/y", out.format = "d/m/y")
-keeps <- c("Mes_Ano","contagem", "prop", "news")
+keeps <- c("Mes_Ano","contagem", "prop", "news", "newst")
 tweet=tweet[keeps]
 microdados_modelos = merge(microdados_modelos, tweet)
 ##
@@ -106,11 +106,11 @@ aggdata$x[aggdata$Group.1 == 7 & aggdata$Group.3 == 4] = aggdata$x[aggdata$Group
 
 ###AGREGANDO DADOS RELEVANTES PARA MODELOS ADL
 dados = microdados_modelos
-classes1 = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta", "contagem", "prop", "news")
+classes1 = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta", "contagem", "prop", "news", "newst")
 expinf1_mes = aggregate(dados[,"Resposta"], dados[,classes1], mean)
 #expinf1_mes = aggregate(x = microdados_modelos$Resposta, by = list(microdados_modelos$Mes_Ano, microdados_modelos$Cidade, microdados_modelos$Renda), FUN = "mean")
 expinf1_mes = expinf1_mes[order(expinf1_mes$Cidade, expinf1_mes$Renda, expinf1_mes$Mes_Ano),]
-colnames(expinf1_mes) = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta","Tweets" , "Prop","News","Resposta")
+colnames(expinf1_mes) = c("Mes_Ano", "Cidade", "Renda", "IPCA", "Previsao_Focus", "Meta","Tweets" , "Prop","News","newst","Resposta")
 aggdata2 <- aggregate(aggdata$x, by=list(aggdata$Group.2), 
                       FUN=sum, na.rm=TRUE)
 aggdata3 = aggregate(expinf1_mes$IPCA, by=list(expinf1_mes$Mes_Ano), 
@@ -126,11 +126,13 @@ aggdata8 = aggregate(as.numeric(expinf1_mes$Prop), by=list(expinf1_mes$Mes_Ano),
                      FUN=mean, na.rm=TRUE)
 aggdata9 = aggregate(as.numeric(expinf1_mes$News), by=list(expinf1_mes$Mes_Ano), 
                      FUN=mean, na.rm=TRUE)
-aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x, aggdata7$x, aggdata8$x, aggdata9$x)
+aggdata10 = aggregate(as.numeric(expinf1_mes$newst), by=list(expinf1_mes$Mes_Ano), 
+                     FUN=mean, na.rm=TRUE)
+aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x, aggdata7$x, aggdata8$x, aggdata9$x, aggdata10$x)
 aggdata <- as.data.frame(aggdata)
 aggdata$V4 = as.numeric(aggdata$V4)
 aggdata$Data <- aggdata6[,1]
-colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Tweets", "Prop", "News","Mes_Ano")
-rm(aggdata3,aggdata4,aggdata5,aggdata6, aggdata7, aggdata8, aggdata9,aggdata2)
+colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Tweets", "Prop", "News", "newst","Mes_Ano")
+rm(aggdata3,aggdata4,aggdata5,aggdata6, aggdata7, aggdata8, aggdata9,aggdata2, aggdata10)
 #write.table(aggdata, file="aggdata.csv", sep=";")
 ##
