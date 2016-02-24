@@ -24,31 +24,38 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
 
 
 
-###Plotando as séries de tweets de infla e tweets totais
-    aggdata2 = ts(cbind(aggdata$News, aggdata$newst), start = c(2009,3), frequency = 12)
-    colnames(aggdata2) = c('Total Notícias', 'Notícias Inflação')
+###Plotando as séries de tweets de infla e tweets totais - base aux_fer
+    ###Gráfico Tweets Capturados
+    aggdata2 = ts(cbind(dados3$ti, dados3$tt, dados3$rei, dados3$ret), start = c(2009,3), frequency = 12)
+    aggdata2 = log(aggdata2)
+    colnames(aggdata2) = c('tweet inf', 'tweet tot', 'retweet inf', 'retweet tot')
     
     par(mfrow=c(2,1), xpd=FALSE, oma=c(0,1,0,0), mar=c(7,4,4,2), cex.main=0.8)
-    plot(aggdata2[,1], type = 'l', main="", axes=F, xlab='Ano', ylab='tweets', cex=0.6)
+    plot(aggdata2[,1], type = 'l', main="", axes=F, xlab='Ano', ylab='tweets', 
+         ylim=c(0,10.5), cex=0.5)
+    lines(aggdata2[,2],col='red', lty=2)
     grid()
     box()
     axis(side = 1)
     axis(side = 2, las = 1, cex.axis = 0.6)
     par(xpd=TRUE, mar=c(7,4,2,2))
-    leg.txt = c("Inflação", "Total")
-    legend(2011,-300, leg.txt,col=c("black", "red"),lwd=c(1,1,1),lty=c(1,1,1),seg.len=2,bty="n", cex = 0.85,ncol=3)
+    leg.txt = c("tweets inf","   " ,"tweets tot")
+    legend(2011,-12, leg.txt,col=c("black","black","red"),lwd=c(1,NA,1),lty=c(1,NA,2),seg.len=2,bty="n", cex = 0.6,ncol=3)
     par(xpd=FALSE, cex.main=0.8)
-    plot(aggdata2[,2], type = 'l', main="", axes=F, xlab='Ano', col='red', ylab='tweets')
+    plot(aggdata2[,3], type = 'l', main="", axes=F, xlab='Ano', col='magenta', ylab='tweets', lty=3, cex=0.5,ylim=c(0,14))
+    lines(aggdata2[,4],col='blue', lty=4)
     grid()
     box()
     axis(side = 1)
     axis(side = 2, las = 1, cex.axis = 0.6)
-    
+    par(xpd=TRUE, mar=c(7,4,2,2))
+    leg.txt = c("retweets inf","   " , "retweets tot")
+    legend(2011,-12, leg.txt,col=c("magenta","black", "blue"),lwd=c(1,NA,1),lty=c(3,NA,4),seg.len=2,bty="n", cex = 0.6,ncol=3)
     
     dev.off()
 
 
-###Plotando as séries comparadas sem tweets
+    ###Plotando as séries comparadas sem tweets
     aggdatats = ts(aggdata, start = c(2009,3), frequency = 12)
     colnames(aggdatats) = colnames(aggdata)
     plot(aggdatats[,11], type = 'l', main="", axes=F, xlab='Ano', ylab='valor', cex=0.6)
@@ -60,9 +67,9 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
     axis(side = 2, las = 1, cex.axis = 0.6)
     leg.txt = c("IPCA", "Resposta", "Focus")
     legend("topleft", leg.txt,col=c("black", "red", "blue"),lwd=c(1,1,1),lty=c(1,2,3),seg.len=2,bty="n", cex = 0.85,ncol=3)
-
-
-###Plotando as séries comparadas com tweets
+    
+    
+    ###Plotando as séries comparadas com tweets
     plot(aggdatats[,13], type = 'l', main="", axes=F, xlab='Ano', ylab='valor', col='green', cex=0.6, ylim=c(4,10))
     lines(aggdatats[,11], col='red', lty=2)
     lines(aggdatats[,12], col='blue', lty=3)
@@ -73,9 +80,12 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
     axis(side = 2, las = 1, cex.axis = 0.6)
     leg.txt = c("Resposta", "IPCA", "Focus", "Tweets")
     legend(2009,10.2, leg.txt,col=c("black", "red", "blue", "green"),lwd=c(1,1,1),lty=c(1,2,3),seg.len=2,bty="n", cex = 0.5,ncol=1)
-
+    
 
 ## Gráficos a serem rodadas com as séries completas - base ADL tweet
+
+    source("C:/Users/fernando.teixeira/Dropbox/10 Expectativas de inflação - Brasil/ProgramasTD64/Funcoes/Modelos/bases", encoding = c("utf8"))
+    
     quanti <- aggdata[,c("Resposta","IPCA","Previsao_Focus")]
     cor(quanti)
     
@@ -103,7 +113,7 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
     axis(side = 1)
     axis(side = 2, las = 1)
     leg.txt = c("Focus", "Consumidor")
-    legend("bottomleft", leg.txt,col=c("red", "blue"),lwd=c(1,1),lty=c(1,2),seg.len=2,bty="n", cex = 0.85)
+    legend("bottomleft", leg.txt,col=c("red", "blue"),lwd=c(1,1),lty=c(1,2),seg.len=2,bty="n", cex = 0.75)
     
     
     comp = ts(quanti, start = c(2005,9), frequency = 12)
@@ -120,3 +130,20 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
     leg.txt = c("IPCA", "Focus", "Consumidor")
     legend("topleft", leg.txt,col=c("red", "black", "blue"),lwd=c(1,1,1),lty=c(1,3,2),seg.len=2,bty="n", cex = 0.85,ncol=3)
 
+
+## Gráficos Boxplots 
+    a = aggregate(dados$number_of_tweets, by=list(dados$account, dados$date), FUN = "sum")
+    require(reshape2)
+    w = reshape(a, timevar = "Group.1", idvar = c("Group.2"), direction = "wide")
+    
+    boxplot(w$`x.@Estadao`,w$`x.@folha`, w$`x.@zerohora`, w$`x.@cbonlinedf`,
+            w$`x.@atarde`, w$`x.@valor_economico`, w$`x.@em_com`, w$`x.@JornalOGlobo`, 
+            w$`x.@jc_pe`,  
+            axes=F, main="", cex=0.5)
+    axis(side = 2, las = 1, cex.axis=0.5)
+    axis(side = 1 , cex.axis = 0.5, at=c(1,2,3,4,5,6,7,8,9),
+         labels= c("Estadão", "Folha", "ZH", "CB", "Atarde", "Valor", 
+                    "Estado de Minas", "Globo", "J. Commercio"))
+    box()
+    
+## 
