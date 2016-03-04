@@ -112,15 +112,15 @@ require(plyr)
   aggdata5 = aggregate(expinf1_mes$Meta, by=list(expinf1_mes$Mes_Ano), 
                        FUN=mean, na.rm=TRUE)
   aggdata6 = as.data.frame(unique(expinf1_mes$Mes_Ano))
-  aggdata7 = aggregate(expinf1_mes$Tweets, by=list(expinf1_mes$Mes_Ano), 
-                       FUN=mean, na.rm=TRUE)
-  aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x, aggdata7$x)
+  #aggdata7 = aggregate(expinf1_mes$Tweets, by=list(expinf1_mes$Mes_Ano), 
+  #                     FUN=mean, na.rm=TRUE)
+  aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x)
   aggdata<-cbind(aggdata2$x,aggdata3$x,aggdata4$x, aggdata5$x)
   aggdata <- as.data.frame(aggdata)
   aggdata$V4 = as.numeric(aggdata$V4)
   aggdata$Data <- aggdata6[,1]
   # colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Tweets", "Mes_Ano")
   colnames(aggdata) = c("Resposta","IPCA","Previsao_Focus", "Meta", "Mes_Ano")
-  rm(aggdata3,aggdata4,aggdata5,aggdata6, aggdata7, aggdata2)
+  rm(aggdata3,aggdata4,aggdata5,aggdata6, aggdata2)
   #write.table(aggdata, file="aggdata.csv", sep=";")
 ###

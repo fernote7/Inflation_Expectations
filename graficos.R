@@ -84,7 +84,7 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
 
 ## Gráficos a serem rodadas com as séries completas - base ADL tweet
 
-    source("C:/Users/fernando.teixeira/Dropbox/10 Expectativas de inflação - Brasil/ProgramasTD64/Funcoes/Modelos/bases", encoding = c("utf8"))
+    source("C:/Users/fernando.teixeira/Dropbox/10 Expectativas de inflação - Brasil/ProgramasTD64/Funcoes/Modelos/bases/base_adl_tweet.R", encoding = c("utf8"))
     
     quanti <- aggdata[,c("Resposta","IPCA","Previsao_Focus")]
     cor(quanti)
