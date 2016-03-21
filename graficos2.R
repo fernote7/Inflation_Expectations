@@ -66,7 +66,7 @@ database=dbReadTable(db,"Data_Tweets")
     OR account LIKE '@jc_pe')"
     
 ###Queries
-    dados = dbGetQuery(db,query)
+    dados = dbGetQuery(db,query1)
     dados2 = dbGetQuery(db,query2)
     dados3 = dbGetQuery(db,query3)
     

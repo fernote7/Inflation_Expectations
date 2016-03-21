@@ -13,13 +13,13 @@ require(plyr)
 ###Importando dados
 
 #MICRODADOS
-  microdados_modelos = read.csv("Dados\\Microdados_Filtrados\\Microdados_Modelos_set05aset15.csv", sep = ";")
+  microdados_modelos = read.csv("C:\\Users\\fernando.teixeira\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\Dados\\Microdados_Filtrados\\Microdados_Modelos_set05aset15.csv", sep = ";")
   #microdados_modelos = read.csv2("Dados\\Microdados_Filtrados\\microdados_basefinal_modelos_040815.csv")
   microdados_modelos[,"Mes_Ano"] = chron(as.character(microdados_modelos[,"Mes_Ano"]),
                                          format = "d/m/y", out.format = "d/m/y")
   microdados_modelos[,"Ano"] = year(microdados_modelos[,"Mes_Ano"])
   dados = microdados_modelos
-  microdados_modelos2 = read.csv2("Dados\\Microdados_Filtrados\\IPCA\\Pasta3.csv")
+  microdados_modelos2 = read.csv2("C:\\Users\\fernando.teixeira\\Dropbox\\10 Expectativas de inflação - Brasil\\ProgramasTD64\\Dados\\Microdados_Filtrados\\IPCA\\Pasta3.csv")
   microdados_modelos2[,"Mes_Ano"] = chron(as.character(microdados_modelos2[,"Mes_Ano"]),
                                         format = "d/m/y", out.format = "d/m/y")
 # #TWITTER

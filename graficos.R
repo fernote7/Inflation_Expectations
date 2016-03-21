@@ -13,46 +13,52 @@ source(paste0(direc, "\\Funcoes\\Modelos\\bases\\base_modelo_tweet.R"), encoding
 
 
 ###Criando variáveis base 100 e depois log para aggdata
-    for(i in 1:79){ if(i == 1){aggdata$Resposta2[i] = 100} else{aggdata$Resposta2[i] = aggdata$Resposta[i]*aggdata$Resposta2[1]/aggdata$Resposta[1]}}
-    for(i in 1:79){ if(i == 1){aggdata$IPCA2[i] = 100} else{aggdata$IPCA2[i] = aggdata$IPCA[i]*aggdata$IPCA2[1]/aggdata$IPCA[1]}}
-    for(i in 1:79){ if(i == 1){aggdata$Previsao_Focus2[i] = 100} else{aggdata$Previsao_Focus2[i] = aggdata$Previsao_Focus[i]*aggdata$Previsao_Focus2[1]/aggdata$Previsao_Focus[1]}}
-    for(i in 1:79){ if(i == 1){aggdata$News2[i] = 100} else{aggdata$News2[i] = aggdata$News[i]*aggdata$News2[1]/aggdata$News[1]}}
-    aggdata$Resposta2 = log(aggdata$Resposta2) 
-    aggdata$IPCA2 = log(aggdata$IPCA2)
-    aggdata$Previsao_Focus2 = log(aggdata$Previsao_Focus2)
-    aggdata$News2 = log(aggdata$News2) 
+#     for(i in 1:79){ if(i == 1){aggdata$Resposta2[i] = 100} else{aggdata$Resposta2[i] = aggdata$Resposta[i]*aggdata$Resposta2[1]/aggdata$Resposta[1]}}
+#     for(i in 1:79){ if(i == 1){aggdata$IPCA2[i] = 100} else{aggdata$IPCA2[i] = aggdata$IPCA[i]*aggdata$IPCA2[1]/aggdata$IPCA[1]}}
+#     for(i in 1:79){ if(i == 1){aggdata$Previsao_Focus2[i] = 100} else{aggdata$Previsao_Focus2[i] = aggdata$Previsao_Focus[i]*aggdata$Previsao_Focus2[1]/aggdata$Previsao_Focus[1]}}
+#     for(i in 1:79){ if(i == 1){aggdata$News2[i] = 100} else{aggdata$News2[i] = aggdata$News[i]*aggdata$News2[1]/aggdata$News[1]}}
+#     aggdata$Resposta2 = log(aggdata$Resposta2) 
+#     aggdata$IPCA2 = log(aggdata$IPCA2)
+#     aggdata$Previsao_Focus2 = log(aggdata$Previsao_Focus2)
+#     aggdata$News2 = log(aggdata$News2) 
 
 
 
 ###Plotando as séries de tweets de infla e tweets totais - base aux_fer
+
+    source(paste0(direc, "aux_fer.R"), encoding = c("utf8"))
+    
     ###Gráfico Tweets Capturados
-    aggdata2 = ts(cbind(dados3$ti, dados3$tt, dados3$rei, dados3$ret), start = c(2009,3), frequency = 12)
-    aggdata2 = log(aggdata2)
-    colnames(aggdata2) = c('tweet inf', 'tweet tot', 'retweet inf', 'retweet tot')
-    
-    par(mfrow=c(2,1), xpd=FALSE, oma=c(0,1,0,0), mar=c(7,4,4,2), cex.main=0.8)
-    plot(aggdata2[,1], type = 'l', main="", axes=F, xlab='Ano', ylab='tweets', 
-         ylim=c(0,10.5), cex=0.5)
-    lines(aggdata2[,2],col='red', lty=2)
-    grid()
-    box()
+    aggdata2 = dados3[,1:5]
+    par(mfrow=c(2,1), xpd=FALSE, oma=c(0,1,0,0), mar=c(4,4,4,7), cex.main=0.8)
+    plot(aggdata2[,2], type = 'l', main="", axes=F, xlab='', ylab='', 
+         ylim=c(0,max(aggdata2[,2])), cex=0.5, bty='l')
     axis(side = 1)
     axis(side = 2, las = 1, cex.axis = 0.6)
-    par(xpd=TRUE, mar=c(7,4,2,2))
-    leg.txt = c("tweets inf","   " ,"tweets tot")
-    legend(2011,-12, leg.txt,col=c("black","black","red"),lwd=c(1,NA,1),lty=c(1,NA,2),seg.len=2,bty="n", cex = 0.6,ncol=3)
-    par(xpd=FALSE, cex.main=0.8)
-    plot(aggdata2[,3], type = 'l', main="", axes=F, xlab='Ano', col='magenta', ylab='tweets', lty=3, cex=0.5,ylim=c(0,14))
-    lines(aggdata2[,4],col='blue', lty=4)
-    grid()
     box()
+    grid()
+    mtext("tweets de inflação",side=2,col="black",line=3, cex = 0.6)
+    par(new=TRUE)
+    plot(aggdata2[,3]/1000,col='red', lty=2, axes=F, ylab = "",
+         main = '', xlab = '',type="l", bty="l")
+    axis(4, col="red",col.axis="red",las=1, cex.axis=0.6)
+    mtext("tweets totais em milhares",side=4,col="red",line=4, cex = 0.6) 
+    par(mar=c(7,4,0,7), cex.main=0.8)
+    plot(aggdata2[,5], type = 'l', main="", axes=F, xlab='Ano', ylab='', 
+         ylim=c(0,max(aggdata2[,5])), cex=0.5, bty='l', col='magenta', lty=3)
     axis(side = 1)
-    axis(side = 2, las = 1, cex.axis = 0.6)
-    par(xpd=TRUE, mar=c(7,4,2,2))
-    leg.txt = c("retweets inf","   " , "retweets tot")
-    legend(2011,-12, leg.txt,col=c("magenta","black", "blue"),lwd=c(1,NA,1),lty=c(3,NA,4),seg.len=2,bty="n", cex = 0.6,ncol=3)
+    box()
+    axis(side = 2, las = 1, cex.axis = 0.6,col="magenta",col.axis="magenta")
+    grid()
+    mtext("retweets de inflação",side=2,col="magenta",line=3, cex = 0.6)
+    par(new=TRUE)
+    plot(aggdata2[,4]/1000,col='blue', lty=4, axes=F, ylab = "",
+         main = '', xlab = '',type="l", bty="l")
+    axis(4, col="blue",col.axis="blue",las=1, cex.axis=0.6)
+    mtext("retweets totais em milhares",side=4,col="blue",line=4, cex = 0.6) 
+  
+    dev.off()    
     
-    dev.off()
 
 
     ###Plotando as séries comparadas sem tweets
